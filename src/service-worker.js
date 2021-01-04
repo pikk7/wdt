@@ -12,6 +12,7 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
+import wiki from "wikijs";
 
 clientsClaim();
 
@@ -70,3 +71,27 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+self.addEventListener('install',event=>{
+    // const months=["January","February","March","April","May","June","July","August","September","October","November","December"]
+    // //const hu_months=["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"]
+    // // const days=[32,30,32,31,32,31,32,32,31,32,31,32]
+    // const now=new Date();
+    // const j=now.getMonth();
+    // const i=now.getDay()+1;
+    console.log("install")
+
+    // wiki({ apiUrl: 'https://en.wikipedia.org/w/api.php' })
+    //     .page(months[j]+" "+i)
+    //     .then(page => page.content())
+    //     .then(data=>data[0]["content"])
+    //     .then(data=>data.split('\n'))
+    //     .then((data)=> {
+    //         // console.log(data)
+    //         console.log(data)
+    //     })
+    //     .catch(( err ) => {
+    //         console.log( err );
+    //         throw err;
+    //     })
+    //console.log(event)
+})
