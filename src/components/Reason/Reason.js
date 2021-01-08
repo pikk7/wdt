@@ -24,9 +24,11 @@ if (firebase.apps.length === 0) {
 const analytics=firebase.analytics();
 
 export default function Reason() {
-    const [reasons,setReasons]=useState(null)
-    const [getNum,setGetNum]=useState(false)
-    const [rand_num,setRandNum]=useState(0)
+    const [reasons,setReasons]=useState(null);
+    const [getNum,setGetNum]=useState(false);
+    const [rand_num,setRandNum]=useState(0);
+    const [networkDataReceived,setNetworkDataReceived]=useState(false);
+
    const getReasons=()=>{
        analytics.logEvent("use_app")
 
@@ -37,12 +39,15 @@ export default function Reason() {
 
        let j=now.getMonth();
        let i=now.getDate();
+        let getDate=months[j]+" "+i;
+
         wiki({ apiUrl: 'https://en.wikipedia.org/w/api.php' })
-            .page(months[j]+" "+i)
+            .page(getDate)
             .then(page => page.content())
             .then(data=>data[0]["content"])
             .then(data=>data.split('\n'))
             .then((data)=> {
+                setNetworkDataReceived(true);
                 data.sort(()=>Math.random()-0.5)
                 setReasons(data)
             })
