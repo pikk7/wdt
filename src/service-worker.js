@@ -11,8 +11,9 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
-// import wiki from "wikijs";
+import { StaleWhileRevalidate,CacheFirst } from 'workbox-strategies';
+import {CacheableResponsePlugin} from 'workbox-cacheable-response';
+
 
 clientsClaim();
 
@@ -71,13 +72,32 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-self.addEventListener('install', function(event) {
-    console.log(event)
-   console.log("Installed")
-});
+
 
 self.addEventListener('fetch', function(event) {
-    console.log("fetched")
-    console.log(event)
-
+    console.log("Fetched")
+    console.log(event.request)
+    event.respondWith(
+        fetch(event.request).catch(function() {
+            return caches.match(event.request);
+        })
+    );
 });
+
+
+
+registerRoute(
+    ({url}) => url.origin === 'https://en.wikipedia.org/w/api.php',
+    new CacheFirst({
+        cacheName: 'events',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 50,
+                maxAgeSeconds: 5 * 60, // 5 minutes
+            }),
+            new CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+        ],
+    })
+);

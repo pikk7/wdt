@@ -27,7 +27,9 @@ export default function Reason() {
     const [reasons,setReasons]=useState(null);
     const [getNum,setGetNum]=useState(false);
     const [rand_num,setRandNum]=useState(0);
-    const [networkDataReceived,setNetworkDataReceived]=useState(false);
+    const [getDay,setGetDay]=useState("");
+
+    // const [networkDataReceived,setNetworkDataReceived]=useState(false);
 
    const getReasons=()=>{
        analytics.logEvent("use_app")
@@ -40,19 +42,21 @@ export default function Reason() {
        let j=now.getMonth();
        let i=now.getDate();
         let getDate=months[j]+" "+i;
-
-        wiki({ apiUrl: 'https://en.wikipedia.org/w/api.php' })
+        const baseURL='https://en.wikipedia.org/w/api.php'
+        wiki({ apiUrl: baseURL})
             .page(getDate)
             .then(page => page.content())
             .then(data=>data[0]["content"])
             .then(data=>data.split('\n'))
             .then((data)=> {
-                setNetworkDataReceived(true);
+               // setNetworkDataReceived(true);
                 data.sort(()=>Math.random()-0.5)
                 setReasons(data)
+                setGetDay(getDate)
             })
             .catch(( err ) => {
                 console.log( err );
+
                 throw err;
             })
     }
@@ -95,7 +99,8 @@ export default function Reason() {
       <>
           {reasons&&reasons[rand_num]&&
               <div>
-                  <h1>{reasons[rand_num].split(" – ")[0]}</h1>
+                  <h1>{getDay}</h1>
+                  <h2>{reasons[rand_num].split(" – ")[0]}</h2>
                   <p>{reasons[rand_num].split(" – ")[1]}</p>
 
               </div>

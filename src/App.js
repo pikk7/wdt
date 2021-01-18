@@ -20,6 +20,7 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import BloodAlcohol from "./components/BloodAlcohol";
 
 const drawerWidth = 240;
 
@@ -130,7 +131,9 @@ function App() {
                   <Route path="/credits">
                       <Credits/>
                   </Route>
-
+                  <Route path="/bloodalcohol">
+                      <BloodAlcohol/>
+                  </Route>
               </Switch>
           <Drawer
               variant="persistent"
@@ -159,6 +162,10 @@ function App() {
                           Credits <AssignmentIcon />
                       </MenuItem>
 
+
+                      <MenuItem onClick={handleDrawerClose} component={Link} to="/bloodalcohol">
+                          BloodAlcohol
+                      </MenuItem>
                   </MenuList>
 
               </List>
