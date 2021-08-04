@@ -29,8 +29,6 @@ export default function Reason() {
   const [getDay, setGetDay] = useState("");
   const [sumReasons, setSumReasons] = useState(999);
 
-  // const [networkDataReceived,setNetworkDataReceived]=useState(false);
-
   const getReasons = () => {
     analytics.logEvent("use_app");
 
@@ -53,49 +51,38 @@ export default function Reason() {
     let now = new Date();
     let j = now.getMonth();
     let i = now.getDate();
-
+    //TO-DO:
+    //setNumbeer setRandom number fixalasa, illetve az egesz fixalasa
     let getDate = months[j] + " " + i;
     const baseURL = "https://en.wikipedia.org/w/api.php";
-    const aprilbad = j === 3 && 18 <= i && i <= 27;
-    const maybad = j === 3 && 2 === i && i === 1;
-    if (aprilbad || maybad) {
-      wiki({ apiUrl: baseURL })
-        .page(getDate)
-        .then((page) => page.content())
-        .then((data) => data[0])
-        .then((data) => data.items[0]["content"])
-        .then((data) => data.split("\n"))
-        .then((data) => {
-          // setNetworkDataReceived(true);
-          data.sort(() => Math.random() - 0.5);
-          setSumReasons(data.length);
-          setReasons(data);
-          setGetDay(getDate);
-        })
-        .catch((err) => {
-          console.log(err);
+    wiki({ apiUrl: baseURL })
+      .page(getDate)
+      .then((page) => page.content())
+      .then((data) => {
+        let rtm = "";
+        if (data[0].items) {
+          data[0].items.map((e) => {
+            rtm = rtm + e.content;
+          });
+        } else {
+          rtm = data[0]["content"];
+        }
 
-          throw err;
-        });
-    } else {
-      wiki({ apiUrl: baseURL })
-        .page(getDate)
-        .then((page) => page.content())
-        .then((data) => data[0]["content"])
-        .then((data) => data.split("\n"))
-        .then((data) => {
-          // setNetworkDataReceived(true);
-          data.sort(() => Math.random() - 0.5);
-          setSumReasons(data.length);
-          setReasons(data);
-          setGetDay(getDate);
-        })
-        .catch((err) => {
-          console.log(err);
+        return rtm;
+      })
+      .then((data) => data.split("\n"))
+      .then((data) => {
+        // setNetworkDataReceived(true);
+        data.sort(() => Math.random() - 0.5);
+        setSumReasons(data.length);
+        setGetDay(getDate);
+        setReasons(data);
+      })
+      .catch((err) => {
+        console.log(err);
 
-          throw err;
-        });
-    }
+        throw err;
+      });
   };
 
   const forward = () => {
@@ -152,7 +139,7 @@ export default function Reason() {
             Forward
           </Button>
           <Grid style={{ display: "flex" }} item>
-            {rand_num + 1}/ {sumReasons}
+            {rand_num + 1} / {sumReasons}
           </Grid>
         </Grid>
       </Grid>
